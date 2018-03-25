@@ -20,8 +20,8 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+group = 'app'
+version = ''
 sourceCompatibility = 1.8
 
 repositories {
@@ -70,6 +70,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.9.RELEASE'
 	compile('org.springframework.boot:spring-boot-starter-web-services')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile(files(genJaxb.classesDir).builtBy(genJaxb))
@@ -77,8 +78,8 @@ dependencies {
 }
 
 bootJar {
-	baseName = 'soap'
-	version =  '0.1.0'
+	baseName = 'app'
+	version =  ''
 
 	from genJaxb.classesDir
 }

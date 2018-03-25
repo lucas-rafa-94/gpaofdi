@@ -1,5 +1,6 @@
-package com.example.soap;
+package com.example.soap.contructors;
 
+import com.example.soap.services.ConsultaCEPClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -15,7 +16,7 @@ public class ConsultaCEPConfiguration {
     }
 
     @Bean
-    public ConsultaCEPClient quoteClient(Jaxb2Marshaller marshaller) {
+    public ConsultaCEPClient getCep(Jaxb2Marshaller marshaller) {
         ConsultaCEPClient client = new ConsultaCEPClient();
         client.setDefaultUri("https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente");
         client.setMarshaller(marshaller);
