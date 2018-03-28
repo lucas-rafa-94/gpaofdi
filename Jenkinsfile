@@ -20,8 +20,8 @@ pipeline {
                         }
         stage('Deploy to Container Cloud'){
                                     steps {
-                                         sh """ build=correios-test-`date +'%Y%m%d%H%M%s'` """
-                                         sh """ curl --insecure -X POST \
+                                         sh """ build=correios-test-`date +'%Y%m%d%H%M%s'` && \
+                                                curl --insecure -X POST \
                                                   https://129.150.220.65/api/v2/deployments/ \
                                                   -H 'Authorization: Basic YWRtaW46TWFzdGVyIzEyMw==' \
                                                   -H 'Cache-Control: no-cache' \
