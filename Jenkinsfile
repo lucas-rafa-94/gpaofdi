@@ -27,7 +27,7 @@ pipeline {
                                                   -H 'Cache-Control: no-cache' \
                                                   -H 'Content-Type: application/json' \
                                                   -H 'Postman-Token: 670f2995-1e2f-34a0-c925-eef93707f393' \
-                                                  -d '{"deployment_id":"'$build'","deployment_name":"'$build'","desired_state":1,"placement":{"pool_id":"default"},"quantities":{"nginx":1},"stack":{"service_id":"correios-test","service_name":"correios-test","subtype":"service"}}' """
+                                                  -d '{"deployment_id":"'correios-test-`date +'%Y%m%d%H%M%s'`'","deployment_name":"'correios-test-`date +'%Y%m%d%H%M%s'`'","desired_state":1,"placement":{"pool_id":"default"},"quantities":{"nginx":1},"stack":{"service_id":"correios-test","service_name":"correios-test","subtype":"service"}}' """
                                     }
                                 }
     }
