@@ -19,4 +19,9 @@ public class CorreiosController {
         return consultaCEPClient.getCep(cep).getReturn();
     }
 
+    @RequestMapping(value = "nome", method = RequestMethod.GET)
+    public String buscarPorPlaca(){
+        return "<p>Funcionou</p>";
+    }
+
 }
