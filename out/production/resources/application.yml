@@ -1,0 +1,37 @@
+folder:
+  path: /Users/lucasdossantos/Desktop/gpaCsv/
+  csvChefe: user_import_chefe.csv
+  csvVendedor: user_import_vendedor.csv
+  zipChefe: IcParticipantDetailChefe.zip
+  zipVendedor: IcParticipantDetailVendedor.zip
+
+client:
+  default-uri-integration-service: https://ehhs-test.fa.la1.oraclecloud.com:443/fscmService/ErpIntegrationService
+  default-uri-mkt-import: https://ehhs-test.fa.la1.oraclecloud.com:443/crmService/ImportPublicService
+  user:
+    name: marcelo.taboada@oracle.com
+    password: gpa12345
+
+integration-service:
+  xmlns:
+    value: http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/types/
+    prefix: typ
+  local-part:
+    getESSJobStatus: getESSJobStatus
+    submitESSJob: submitESSJobRequest
+  services:
+    validateEmployeeResourceImportData:
+      jobDefinitionName: FoundationBulkImportProcess_HZ_IMPORT_RESOURCE_PRE_VALIDATE
+      packageName: /oracle/apps/ess/cdm/foundation/bulkImport/
+      arguments:
+        n1: 300000003723024
+mkt-import:
+  xmlns:
+    value: http://xmlns.oracle.com/oracle/apps/marketing/commonMarketing/mktImport/model/types/
+    prefix: typ
+  local-part:
+    submitImportActivity: submitImportActivity
+  services:
+
+
+
