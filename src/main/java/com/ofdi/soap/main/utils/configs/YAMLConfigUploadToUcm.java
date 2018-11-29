@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-@ConfigurationProperties("uploadFileToUcm")
+@ConfigurationProperties("uploadfiletoucm")
 public class YAMLConfigUploadToUcm {
 
     private String defaultUri;

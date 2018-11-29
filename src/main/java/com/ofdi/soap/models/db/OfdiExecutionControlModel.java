@@ -1,4 +1,4 @@
-package com.ofdi.soap.models;
+package com.ofdi.soap.models.db;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

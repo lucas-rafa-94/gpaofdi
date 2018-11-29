@@ -7,15 +7,20 @@ public class ConfigUtilsEss {
     public static class Services {
         private Jobs sendToLdap;
         private Jobs incentiveCompensationParticipantDetailImport;
+        private Jobs importIncentiveCompensationParticipants;
+        private Jobs importParticipantsGoals;
         private Jobs assignRolesToParticipants;
 
-        public Services(Jobs sendToLdap, Jobs incentiveCompensationParticipantDetailImport, Jobs assignRolesToParticipants) {
+        public Services(Jobs sendToLdap, Jobs incentiveCompensationParticipantDetailImport, Jobs importIncentiveCompensationParticipants, Jobs importParticipantsGoals, Jobs assignRolesToParticipants) {
             this.sendToLdap = sendToLdap;
             this.incentiveCompensationParticipantDetailImport = incentiveCompensationParticipantDetailImport;
+            this.importIncentiveCompensationParticipants = importIncentiveCompensationParticipants;
+            this.importParticipantsGoals = importParticipantsGoals;
             this.assignRolesToParticipants = assignRolesToParticipants;
         }
 
-        public Services() { }
+        public Services() {
+        }
 
         public Jobs getSendToLdap() {
             return sendToLdap;
@@ -33,6 +38,22 @@ public class ConfigUtilsEss {
             this.incentiveCompensationParticipantDetailImport = incentiveCompensationParticipantDetailImport;
         }
 
+        public Jobs getImportIncentiveCompensationParticipants() {
+            return importIncentiveCompensationParticipants;
+        }
+
+        public void setImportIncentiveCompensationParticipants(Jobs importIncentiveCompensationParticipants) {
+            this.importIncentiveCompensationParticipants = importIncentiveCompensationParticipants;
+        }
+
+        public Jobs getImportParticipantsGoals() {
+            return importParticipantsGoals;
+        }
+
+        public void setImportParticipantsGoals(Jobs importParticipantsGoals) {
+            this.importParticipantsGoals = importParticipantsGoals;
+        }
+
         public Jobs getAssignRolesToParticipants() {
             return assignRolesToParticipants;
         }
@@ -42,7 +63,7 @@ public class ConfigUtilsEss {
         }
     }
 
-    public static class Jobs {
+        public static class Jobs {
         private String jobDefinitionName;
         private String packageName;
         private List<String> arguments;

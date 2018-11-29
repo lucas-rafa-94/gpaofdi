@@ -8,16 +8,16 @@ public class ConfigUtilsOthersServices {
         private String name;
         private String prefix;
         private List<String> localPart;
-        private List<Integer> values;
+        private List<String> values;
         private ServiceCustom upload;
 
-        public XmlnsCustom(String name, String prefix, List<String> localPart, List<Integer> values) {
+        public XmlnsCustom(String name, String prefix, List<String> localPart, List<String> values, ServiceCustom upload) {
             this.name = name;
             this.prefix = prefix;
             this.localPart = localPart;
             this.values = values;
+            this.upload = upload;
         }
-
 
         public XmlnsCustom() {
         }
@@ -46,42 +46,49 @@ public class ConfigUtilsOthersServices {
             this.localPart = localPart;
         }
 
-        public List<Integer> getValues() {
+        public List<String> getValues() {
             return values;
         }
 
-        public void setValues(List<Integer> values) {
+        public void setValues(List<String> values) {
             this.values = values;
         }
-    }
 
-    public static class ServiceCustom {
-        private XmlnsCustom xmlnsFather;
-        private XmlnsCustom xmlnsChild;
-
-        public ServiceCustom(XmlnsCustom xmlnsFather, XmlnsCustom xmlnsChild) {
-            this.xmlnsFather = xmlnsFather;
-            this.xmlnsChild = xmlnsChild;
+        public ServiceCustom getUpload() {
+            return upload;
         }
 
-        public ServiceCustom() {
-        }
-
-        public XmlnsCustom getXmlnsFather() {
-            return xmlnsFather;
-        }
-
-        public void setXmlnsFather(XmlnsCustom xmlnsFather) {
-            this.xmlnsFather = xmlnsFather;
-        }
-
-        public XmlnsCustom getXmlnsChild() {
-            return xmlnsChild;
-        }
-
-        public void setXmlnsChild(XmlnsCustom xmlnsChild) {
-            this.xmlnsChild = xmlnsChild;
+        public void setUpload(ServiceCustom upload) {
+            this.upload = upload;
         }
     }
 
-}
+        public static class ServiceCustom {
+            private XmlnsCustom xmlnsFather;
+            private XmlnsCustom xmlnsChild;
+
+            public ServiceCustom(XmlnsCustom xmlnsFather, XmlnsCustom xmlnsChild) {
+                this.xmlnsFather = xmlnsFather;
+                this.xmlnsChild = xmlnsChild;
+            }
+
+            public ServiceCustom() {
+            }
+
+            public XmlnsCustom getXmlnsFather() {
+                return xmlnsFather;
+            }
+
+            public void setXmlnsFather(XmlnsCustom xmlnsFather) {
+                this.xmlnsFather = xmlnsFather;
+            }
+
+            public XmlnsCustom getXmlnsChild() {
+                return xmlnsChild;
+            }
+
+            public void setXmlnsChild(XmlnsCustom xmlnsChild) {
+                this.xmlnsChild = xmlnsChild;
+            }
+        }
+    }

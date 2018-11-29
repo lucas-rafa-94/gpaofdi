@@ -1,6 +1,6 @@
 package com.ofdi.soap.repository;
 
-import com.ofdi.soap.models.OfdiExecutionControlModel;
+import com.ofdi.soap.models.db.OfdiExecutionControlModel;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

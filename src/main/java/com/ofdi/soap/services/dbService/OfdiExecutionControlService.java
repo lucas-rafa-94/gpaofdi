@@ -1,6 +1,6 @@
 package com.ofdi.soap.services.dbService;
 
-import com.ofdi.soap.models.OfdiExecutionControlModel;
+import com.ofdi.soap.models.db.OfdiExecutionControlModel;
 import com.ofdi.soap.repository.OfdiExecutionControlRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,9 +1,11 @@
 folder:
-  path: /Users/lucasdossantos/Desktop/gpaCsv/
+  path: /Users/lucasdossantos/Desktop/gpaCsv/testefinal/
   csvChefe: user_import_chefe.csv
   csvVendedor: user_import_vendedor.csv
   zipChefe: IcParticipantDetailChefe.zip
-  zipVendedor: IcParticipantDetailVendedor.zip
+  zipVendedor: IcParticipantDetailVend.zip
+  zipGoalChefe: IcGoalImportChefe.zip
+  zipGoalVendedor: IcGoalImportVend.zip
 
 client:
   defaultUriIntegrationService: https://ehhs-test.fa.la1.oraclecloud.com:443/fscmService/ErpIntegrationService
@@ -12,9 +14,9 @@ client:
     name: marcelo.taboada@oracle.com
     password: gpa12345
 
-mktImport:
+mktimport:
   defaultUri: https://ehhs-test.fa.la1.oraclecloud.com:443/crmService/ImportPublicService
-  submitImportActivity:
+  submitImportActivityChefe:
     xmlnsFather:
       name: http://xmlns.oracle.com/oracle/apps/marketing/commonMarketing/mktImport/model/types/
       prefix: typ
@@ -31,7 +33,27 @@ mktImport:
         - FileContent
       values:
         - Y
-        - 300000001723186
+        - 300000003723223
+        - ;
+        - OTHER_DELIMITER
+  submitImportActivityVendedor:
+    xmlnsFather:
+      name: http://xmlns.oracle.com/oracle/apps/marketing/commonMarketing/mktImport/model/types/
+      prefix: typ
+      localPart:
+        - submitImportActivity
+    xmlnsChild:
+      name: http://xmlns.oracle.com/oracle/apps/marketing/commonMarketing/mktImport/model/
+      prefix: mod
+      localPart:
+        - HeaderRowIncluded
+        - MappingNumber
+        - Delimiter
+        - FileFormat
+        - FileContent
+      values:
+        - Y
+        - 300000003723398
         - ;
         - OTHER_DELIMITER
   getImportActivityStatus:
@@ -48,7 +70,7 @@ mktImport:
       values:
 
 
-uploadFileToUcm:
+uploadfiletoucm:
   defaultUri: https://ehhs-test.fa.la1.oraclecloud.com:443/fscmService/ErpIntegrationService
   upload:
     xmlnsFather:
@@ -69,63 +91,55 @@ uploadFileToUcm:
       values:
 
 
-essJobs:
+ess:
   defaultUri: https://ehhs-test.fa.la1.oraclecloud.com:443/fscmService/ErpIntegrationService
   xmlns:
     value: http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/types/
     prefix: typ
-  local-part:
+  localPart:
     getESSJobStatus: getESSJobStatus
-    submitESSJob: submitESSJobRequest
+    submitESSJobRequest: submitESSJobRequest
   services:
     sendToLdap:
       jobDefinitionName: CopyPersonalData
       packageName: /oracle/apps/ess/hcm/users/
-      arguments:
-        - ALL_USERS
+      arguments: ALL_USERS
       inputs:
     importIncentiveCompensationParticipants:
       jobDefinitionName: ParticipantsImportSQL
       packageName: /oracle/apps/ess/incentiveCompensation/cn/processes/transactionProcess/
-      arguments:
-        - 300000001064232
-        - '#NULL'
-        - '#NULL'
-        - PARTICIPANT
-        - '#NULL'
-        - '#NULL'
-        - '#NULL'
-        - '#NULL'
-        - '#NULL'
-        - '#NULL'
-        - '#NULL'
-        - '#NULL'
-        - '#NULL'
-        - '#NULL'
-        - '#NULL'
-        - HR_EMPLOYEE
+      arguments: 300000001064232, '#NULL', '#NULL', PARTICIPANT, '#NULL', '#NULL', '#NULL', '#NULL', '#NULL', '#NULL', '#NULL', '#NULL', '#NULL', '#NULL', '#NULL', 'HR_EMPLOYEE'
       inputs:
     incentiveCompensationParticipantDetailImport:
       jobDefinitionName: SrpInterfaceLoader
       packageName: /oracle/apps/ess/incentiveCompensation/cn/processes/transactionProcess/
-      arguments:
-        - archive
-        - idArchive
-        - N
-      inputs:
-        - 0
-        - 1
+      arguments: archive, idArchive, N
+      inputs: 0, 1
+    importParticipantsGoals:
+      jobDefinitionName: SrpGoalInterfaceLoader
+      packageName: /oracle/apps/ess/incentiveCompensation/cn/processes/transactionProcess/
+      arguments: archive, idArchive, N
+      inputs: 0, 1
     assignRolesToParticipants:
       jobDefinitionName: ParticipantAssignment
       packageName: /oracle/apps/ess/incentiveCompensation/cn/processes/setupProcess/
-      arguments:
-        - 300000001064232
-        - date
-        - date
-        - NEW
-        - ROLE_ASGN
-        - '#NULL'
-      inputs:
+      arguments: 300000001064232, date, date, NEW, ROLE_ASGN, '#NULL'
+      inputs: 1, 2
+
+utils:
+  file: zip
+  accountparticipant: ic$/incentiveCompensationParticipant$/import$
+  accountgoal: ic$/incentiveCompensationParticipantGoal$/import$
+  role: FAFusionImportExport
+  switch: N
+  threadsleep: 36000
+
+incentivecompensation:
+  mapping: 300000001064232
+  param1: NEW
+  param2: ROLE_ASGN
+  param3: '#NULL'
+
 
 
 

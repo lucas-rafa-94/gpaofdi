@@ -1,9 +1,12 @@
 package com.ofdi.soap.services.mktImport;
 
+import com.ofdi.soap.main.utils.configs.YAMLConfigMktImport;
 import mktImport.wsdl.GetImportActivityStatus;
 import mktImport.wsdl.GetImportActivityStatusResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
 import javax.xml.bind.JAXBElement;
@@ -14,6 +17,12 @@ public class GetImportActivityStatusClient extends WebServiceGatewaySupport {
 
     Logger logger = LoggerFactory.getLogger(GetImportActivityStatusClient.class);
 
+    @Autowired
+    private YAMLConfigMktImport myConfigMktImport;
+
+    @Value("${utils.threadsleep}")
+    private String threadSleep;
+
     public GetImportActivityStatusResponse getImportActivityStatus(long id) throws Exception{
 
         GetImportActivityStatusResponse response = new GetImportActivityStatusResponse();
@@ -23,11 +32,11 @@ public class GetImportActivityStatusClient extends WebServiceGatewaySupport {
         request.setImportJobId(id);
 
         do {
-                Thread.sleep(36000l);
+                Thread.sleep(Long.parseLong(threadSleep));
                 response = (GetImportActivityStatusResponse) JAXBIntrospector.getValue(getWebServiceTemplate()
                         .marshalSendAndReceive(
-                                "https://ehhs-test.fa.la1.oraclecloud.com:443/crmService/ImportPublicService",
-                                new JAXBElement<>(new QName("http://xmlns.oracle.com/oracle/apps/marketing/commonMarketing/mktImport/model/types/", "getImportActivityStatus", "typ"), GetImportActivityStatus.class, request)));
+                                myConfigMktImport.getDefaultUri(),
+                                new JAXBElement<>(new QName(myConfigMktImport.getGetImportActivityStatus().getXmlnsFather().getName(), myConfigMktImport.getGetImportActivityStatus().getXmlnsFather().getLocalPart().get(0), myConfigMktImport.getGetImportActivityStatus().getXmlnsFather().getPrefix()), GetImportActivityStatus.class, request)));
                 logger.info("Status import " + id + ": " +response.getResult().getStatus().getValue());
         } while (
             !response.getResult().getStatus().getValue().equals("COMPLETE")

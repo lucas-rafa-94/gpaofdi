@@ -2,16 +2,31 @@ package com.ofdi.soap.main.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class Helpers {
+
+    @Value("${incentivecompensation.mapping}")
+    private String mapping;
+
+    @Value("${incentivecompensation.param1}")
+    private String param1;
+
+    @Value("${incentivecompensation.param2}")
+    private String param2;
+
+    @Value("${incentivecompensation.param3}")
+    private String param3;
 
     Logger logger = LoggerFactory.getLogger(Helpers.class);
 
@@ -59,5 +74,24 @@ public class Helpers {
         }else{
             return false;
         }
+    }
+
+    public List<String> getIncentiveParams(){
+        List<String> params = new ArrayList<>();
+        params.add(mapping);
+        params.add(toDateNow());
+        params.add(toDateNow());
+        params.add(param1);
+        params.add(param2);
+        params.add(param3);
+        return params;
+    }
+
+    public List<String> getImportDataParams(String file, String documentId, String type){
+        List<String> params = new ArrayList<>();
+        params.add(file);
+        params.add(documentId);
+        params.add(type);
+        return params;
     }
 }

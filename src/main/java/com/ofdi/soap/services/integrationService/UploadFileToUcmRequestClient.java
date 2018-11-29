@@ -1,27 +1,20 @@
 package com.ofdi.soap.services.integrationService;
 
+import com.ofdi.soap.main.utils.configs.YAMLConfigMktImport;
+import com.ofdi.soap.main.utils.configs.YAMLConfigUploadToUcm;
 import integrationService.wsdl.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBIntrospector;
 import javax.xml.namespace.QName;
-import java.util.List;
 
 public class UploadFileToUcmRequestClient extends WebServiceGatewaySupport {
 
-    @Value("${client.default-uri-integration-service}")
-    private String defaultUri;
-
-    @Value("${integration-service.xmlns.value}")
-    private String xmlns;
-
-    @Value("${integration-service.xmlns.prefix}")
-    private String prefix;
-
-    @Value("${integration-service.local-part.submitESSJob}")
-    private String localPart;
+    @Autowired
+    private YAMLConfigUploadToUcm myConfigUploadToUcm;
 
     public UploadFileToUcmResponse uploadFileToUcmRequest(byte [] content, String fileName, String contentType, String documentTitle, String documentAuthor, String documentSecurityGroup, String documentAccount, String documentName) {
 
@@ -30,20 +23,18 @@ public class UploadFileToUcmRequestClient extends WebServiceGatewaySupport {
 
         documentDetails.setContent(content);
         documentDetails.setFileName(fileName);
-      //  documentDetails.setContentType(new JAXBElement<>(new QName("http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/", "ContentType", "erp"), String.class,contentType));
-        documentDetails.setDocumentTitle(new JAXBElement<>(new QName("http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/", "DocumentTitle", "erp"), String.class,documentTitle));
-        documentDetails.setDocumentAuthor(new JAXBElement<>(new QName("http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/", "DocumentAuthor", "erp"), String.class,documentAuthor));
-        documentDetails.setDocumentSecurityGroup(new JAXBElement<>(new QName("http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/", "DocumentSecurityGroup", "erp"), String.class,documentSecurityGroup));
-        documentDetails.setDocumentAccount(new JAXBElement<>(new QName("http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/", "DocumentAccount", "erp"), String.class, documentAccount));
-        documentDetails.setDocumentName(new JAXBElement<>(new QName("http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/", "DocumentName", "erp"), String.class, documentName));
-       // documentDetails.setDocumentId(new JAXBElement<>(new QName("http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/", "DocumentId", "erp"), String.class,"null"));
+        documentDetails.setDocumentTitle(new JAXBElement<>(new QName(myConfigUploadToUcm.getUpload().getXmlnsChild().getName(), myConfigUploadToUcm.getUpload().getXmlnsChild().getLocalPart().get(0), myConfigUploadToUcm.getUpload().getXmlnsChild().getPrefix()), String.class,documentTitle));
+        documentDetails.setDocumentAuthor(new JAXBElement<>(new QName(myConfigUploadToUcm.getUpload().getXmlnsChild().getName(), myConfigUploadToUcm.getUpload().getXmlnsChild().getLocalPart().get(1), myConfigUploadToUcm.getUpload().getXmlnsChild().getPrefix()), String.class,documentAuthor));
+        documentDetails.setDocumentSecurityGroup(new JAXBElement<>(new QName(myConfigUploadToUcm.getUpload().getXmlnsChild().getName(), myConfigUploadToUcm.getUpload().getXmlnsChild().getLocalPart().get(2), myConfigUploadToUcm.getUpload().getXmlnsChild().getPrefix()), String.class,documentSecurityGroup));
+        documentDetails.setDocumentAccount(new JAXBElement<>(new QName(myConfigUploadToUcm.getUpload().getXmlnsChild().getName(), myConfigUploadToUcm.getUpload().getXmlnsChild().getLocalPart().get(3), myConfigUploadToUcm.getUpload().getXmlnsChild().getPrefix()), String.class, documentAccount));
+        documentDetails.setDocumentName(new JAXBElement<>(new QName(myConfigUploadToUcm.getUpload().getXmlnsChild().getName(), myConfigUploadToUcm.getUpload().getXmlnsChild().getLocalPart().get(4), myConfigUploadToUcm.getUpload().getXmlnsChild().getPrefix()), String.class, documentName));
 
         request.setDocument(documentDetails);
 
         UploadFileToUcmResponse response = (UploadFileToUcmResponse) JAXBIntrospector.getValue(getWebServiceTemplate()
                 .marshalSendAndReceive(
-                        defaultUri,
-                        new JAXBElement<>(new QName("http://xmlns.oracle.com/apps/financials/commonModules/shared/model/erpIntegrationService/types/", "uploadFileToUcm", "erp"), UploadFileToUcm.class, request)));
+                        myConfigUploadToUcm.getDefaultUri(),
+                        new JAXBElement<>(new QName(myConfigUploadToUcm.getUpload().getXmlnsFather().getName(), myConfigUploadToUcm.getUpload().getXmlnsFather().getLocalPart().get(0), myConfigUploadToUcm.getUpload().getXmlnsFather().getPrefix()), UploadFileToUcm.class, request)));
 
         return response;
     }

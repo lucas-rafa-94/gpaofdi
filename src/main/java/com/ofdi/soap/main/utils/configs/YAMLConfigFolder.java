@@ -14,13 +14,17 @@ public class YAMLConfigFolder {
     private String csvVendedor;
     private String zipChefe;
     private String zipVendedor;
+    private String zipGoalChefe;
+    private String zipGoalVendedor;
 
-    public YAMLConfigFolder(String path, String csvChefe, String csvVendedor, String zipChefe, String zipVendedor) {
+    public YAMLConfigFolder(String path, String csvChefe, String csvVendedor, String zipChefe, String zipVendedor, String zipGoalChefe, String zipGoalVendedor) {
         this.path = path;
         this.csvChefe = csvChefe;
         this.csvVendedor = csvVendedor;
         this.zipChefe = zipChefe;
         this.zipVendedor = zipVendedor;
+        this.zipGoalChefe = zipGoalChefe;
+        this.zipGoalVendedor = zipGoalVendedor;
     }
 
     public YAMLConfigFolder() {
@@ -64,5 +68,21 @@ public class YAMLConfigFolder {
 
     public void setZipVendedor(String zipVendedor) {
         this.zipVendedor = zipVendedor;
+    }
+
+    public String getZipGoalChefe() {
+        return zipGoalChefe;
+    }
+
+    public void setZipGoalChefe(String zipGoalChefe) {
+        this.zipGoalChefe = zipGoalChefe;
+    }
+
+    public String getZipGoalVendedor() {
+        return zipGoalVendedor;
+    }
+
+    public void setZipGoalVendedor(String zipGoalVendedor) {
+        this.zipGoalVendedor = zipGoalVendedor;
     }
 }

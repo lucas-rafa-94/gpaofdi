@@ -4,6 +4,8 @@ import integrationService.wsdl.GetESSJobStatus;
 import integrationService.wsdl.GetESSJobStatusResponse;
 import mktImport.wsdl.GetImportActivityStatus;
 import mktImport.wsdl.GetImportActivityStatusResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
@@ -15,6 +17,11 @@ import javax.xml.namespace.QName;
 
 public class GetESSJobStatusRequestClient extends WebServiceGatewaySupport {
 
+    Logger logger = LoggerFactory.getLogger(GetESSJobStatusRequestClient.class);
+
+    @Value("${utils.threadsleep}")
+    private String threadSleep;
+
     public GetESSJobStatusResponse getEssJobStatus(Long requestId , String defaultUri, String localPart, String xmlnsValue, String xmlnsPrefix) throws Exception {
 
         GetESSJobStatus request = new GetESSJobStatus();
@@ -22,12 +29,12 @@ public class GetESSJobStatusRequestClient extends WebServiceGatewaySupport {
         request.setRequestId(requestId);
 
         do {
-                Thread.sleep(36000l);
+                Thread.sleep(Long.parseLong(threadSleep));
                 response = (GetESSJobStatusResponse) JAXBIntrospector.getValue(getWebServiceTemplate()
                         .marshalSendAndReceive(
                                 defaultUri,
                                 new JAXBElement<>(new QName(xmlnsValue, localPart, xmlnsPrefix), GetESSJobStatus.class, request)));
-                System.out.println(response.getResult());
+            logger.info("id: " + requestId + " status: " + response.getResult());
         } while(
                         !response.getResult().equalsIgnoreCase("SUCCEEDED") &&
                         !response.getResult().equalsIgnoreCase("SUCCESS_STATUS") &&

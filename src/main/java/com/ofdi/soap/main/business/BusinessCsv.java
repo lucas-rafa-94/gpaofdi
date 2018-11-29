@@ -1,7 +1,7 @@
 package com.ofdi.soap.main.business;
 
 import com.ofdi.soap.main.utils.Helpers;
-import com.ofdi.soap.models.OfdiExecutionControlModel;
+import com.ofdi.soap.models.db.OfdiExecutionControlModel;
 import com.ofdi.soap.services.dbService.OfdiExecutionControlService;
 import com.ofdi.soap.services.mktImport.GetImportActivityStatusClient;
 import com.ofdi.soap.services.mktImport.SubmitImportActivityRequestClient;
@@ -31,14 +31,14 @@ public class BusinessCsv {
     @Autowired
     Helpers helpers;
 
-    public void importArchive(String csv, String path, String username ){
+    public void importArchive(String csv, String path, String username, boolean chefe ){
 
         SubmitImportActivityResponse submitImportActivityResponse = new SubmitImportActivityResponse();
 
         String id = helpers.toTimesTamp() + csv.replace(".csv","");
         oecs.insert(new OfdiExecutionControlModel(id, csv, path, username, "STARTED", 0, new Date()));
         try{
-            submitImportActivityResponse = siarc.submitImportActivity(helpers.getFileContent(path + csv));
+            submitImportActivityResponse = siarc.submitImportActivity(helpers.getFileContent(path + csv), chefe);
             logger.info("Sucesso ao importar arquivo  : " + csv + " id: " + submitImportActivityResponse.getResult().getJobId().getValue());
         }catch (Exception e){
             logger.error("Erro ao importar " + csv + " : " + e.getMessage());

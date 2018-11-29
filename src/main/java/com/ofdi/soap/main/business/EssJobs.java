@@ -26,22 +26,34 @@ public class EssJobs {
     @Autowired
     GetESSJobStatusRequestClient gejsrc;
 
-    public void abstractService(String serviceName, String jobDefinition, String jobPackage, List<String> params){
+    public static  List<String> verifyInputs( List<String> params, List<String> inputs){
+        if(inputs != null){
+            return inputs;
+        }else {
+            return params;
+        }
+    }
+
+    public void abstractService(String serviceName, String jobDefinition, String jobPackage, List<String> params, List<String> inputs){
 
         SubmitESSJobRequestResponse submitESSJobRequestResponse = new SubmitESSJobRequestResponse();
 
-        try{
+            try {
                 logger.info("Servico " + serviceName);
-                submitESSJobRequestResponse = sejrc.submitESSJobRequest(jobDefinition, jobPackage, params, myConfigEssJobs.getDefaultUri(), myConfigEssJobs.getLocalPart().getSubmitESSJobRequest(), myConfigEssJobs.getXmlns().getPrefix(), myConfigEssJobs.getXmlns().getValue());
-            }catch (Exception e){
+                submitESSJobRequestResponse = sejrc.submitESSJobRequest(jobDefinition, jobPackage, verifyInputs(params,inputs), myConfigEssJobs.getDefaultUri(), myConfigEssJobs.getLocalPart().getSubmitESSJobRequest(), myConfigEssJobs.getXmlns().getPrefix(), myConfigEssJobs.getXmlns().getValue());
+                logger.info("Submit " + serviceName + " id: " + submitESSJobRequestResponse.getResult());
+            } catch (Exception e) {
+                e.printStackTrace();
                 logger.error("Erro no servico " + serviceName + " : " + e.getMessage());
             }
 
-            try{
-                gejsrc.getEssJobStatus(submitESSJobRequestResponse.getResult(), myConfigEssJobs.getDefaultUri(), myConfigEssJobs.getLocalPart().getGetESSJobStatus(), myConfigEssJobs.getXmlns().getPrefix(), myConfigEssJobs.getXmlns().getValue());
+            try {
+                gejsrc.getEssJobStatus(submitESSJobRequestResponse.getResult(), myConfigEssJobs.getDefaultUri(), myConfigEssJobs.getLocalPart().getGetESSJobStatus(), myConfigEssJobs.getXmlns().getValue(), myConfigEssJobs.getXmlns().getPrefix());
                 logger.info("Sucesso ao " + serviceName);
-            }catch (Exception e){
+            } catch (Exception e) {
+                e.printStackTrace();
                 logger.error("Erro ao " + serviceName + " : " + e.getMessage());
             }
+
     }
 }
