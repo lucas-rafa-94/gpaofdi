@@ -39,18 +39,6 @@ public class AppStartupRunner implements ApplicationRunner {
     @Value("${utils.switch}")
     private String s;
 
-    @Value("${incentivecompensation.mapping}")
-    private String mapping;
-
-    @Value("${incentivecompensation.param1}")
-    private String param1;
-
-    @Value("${incentivecompensation.param2}")
-    private String param2;
-
-    @Value("${incentivecompensation.param3}")
-    private String param3;
-
     @Autowired
     private YAMLConfigFolder myConfigFolder;
 
