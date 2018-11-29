@@ -94,8 +94,8 @@ dependencies {
 }
 
 bootJar {
-	baseName = 'app'
-	version =  ''
+	baseName = 'gpaofdi'
+	version =  '0.1'
 
 	from genJaxb.classesDir
 }

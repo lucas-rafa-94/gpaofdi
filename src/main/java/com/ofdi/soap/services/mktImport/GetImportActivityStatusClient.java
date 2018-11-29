@@ -38,6 +38,9 @@ public class GetImportActivityStatusClient extends WebServiceGatewaySupport {
                                 myConfigMktImport.getDefaultUri(),
                                 new JAXBElement<>(new QName(myConfigMktImport.getGetImportActivityStatus().getXmlnsFather().getName(), myConfigMktImport.getGetImportActivityStatus().getXmlnsFather().getLocalPart().get(0), myConfigMktImport.getGetImportActivityStatus().getXmlnsFather().getPrefix()), GetImportActivityStatus.class, request)));
                 logger.info("Status import " + id + ": " +response.getResult().getStatus().getValue());
+                if(response.getResult().getStatus().getValue().equals("COMPLETE_WITH_ERRORS")){
+                    break;
+                }
         } while (
             !response.getResult().getStatus().getValue().equals("COMPLETE")
         );

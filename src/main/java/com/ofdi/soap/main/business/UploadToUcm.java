@@ -29,11 +29,13 @@ public class UploadToUcm {
     public String uploadFile(String path, byte [] content, String fileName, String contentType, String documentTitle, String documentAuthor, String documentSecurityGroup, String documentAccount, String documentName) {
         String id = helpers.toTimesTamp() + fileName.replace(".zip","");
         String result = "";
+        oecs.insert(new OfdiExecutionControlModel(id, fileName.trim(), path, documentAuthor, "STARTED", 0, new Date()));
+
         try {
             logger.info("Importando arquivo " + fileName.trim());
             result  = ufturc.uploadFileToUcmRequest(content, fileName.trim(), contentType, documentTitle, documentAuthor, documentSecurityGroup, documentAccount, documentName).getResult();
             logger.info("Sucesso ao iportar arquivo " + fileName.trim() + " id: " + result);
-            oecs.insert(new OfdiExecutionControlModel(id, fileName.trim(), path, documentAuthor, "SUCCESS", 1, new Date()));
+            oecs.insert(new OfdiExecutionControlModel(id, fileName.trim(), path, documentAuthor, "IMPORTED", 1, new Date()));
         }catch (Exception e){
             e.printStackTrace();
             logger.info("Erro ao importar Arquivo " + fileName.trim() + " : " + e.getMessage());

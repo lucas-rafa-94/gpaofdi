@@ -2,12 +2,9 @@ package com.ofdi.soap.services.integrationService;
 
 import integrationService.wsdl.GetESSJobStatus;
 import integrationService.wsdl.GetESSJobStatusResponse;
-import mktImport.wsdl.GetImportActivityStatus;
-import mktImport.wsdl.GetImportActivityStatusResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
 import javax.xml.bind.JAXBElement;

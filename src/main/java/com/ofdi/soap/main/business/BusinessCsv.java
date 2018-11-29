@@ -39,14 +39,19 @@ public class BusinessCsv {
         oecs.insert(new OfdiExecutionControlModel(id, csv, path, username, "STARTED", 0, new Date()));
         try{
             submitImportActivityResponse = siarc.submitImportActivity(helpers.getFileContent(path + csv), chefe);
+            oecs.insert(new OfdiExecutionControlModel(id, csv, path, username, "IMPORTED", 1, new Date()));
             logger.info("Sucesso ao importar arquivo  : " + csv + " id: " + submitImportActivityResponse.getResult().getJobId().getValue());
         }catch (Exception e){
             logger.error("Erro ao importar " + csv + " : " + e.getMessage());
             oecs.insert(new OfdiExecutionControlModel(id, csv, path, username, "FAILED", 1, new Date()));
         }
         try{
-            giasc.getImportActivityStatus(submitImportActivityResponse.getResult().getJobId().getValue());
-            oecs.insert(new OfdiExecutionControlModel(id, csv, path, username, "IMPORTED", 2, new Date()));
+            if(giasc.getImportActivityStatus(submitImportActivityResponse.getResult().getJobId().getValue()).getResult().getStatus().getValue().equals("COMPLETE_WITH_ERRORS")){
+                logger.error("Erro ao importar " + csv + " : " + "COMPLETE_WITH_ERRORS");
+                logger.info("Encerrando Aplicacao...");
+                System.exit(0);
+            };
+            oecs.insert(new OfdiExecutionControlModel(id, csv, path, username, "PROCESSED", 2, new Date()));
         }catch (Exception e){
             logger.error("Erro ao importar " + csv + " : " + e.getMessage());
             oecs.insert(new OfdiExecutionControlModel(id, csv, path, username, "FAILED", 2, new Date()));

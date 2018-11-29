@@ -1,10 +1,8 @@
 package com.ofdi.soap.services.integrationService;
 
-import com.ofdi.soap.main.utils.configs.YAMLConfigMktImport;
 import com.ofdi.soap.main.utils.configs.YAMLConfigUploadToUcm;
 import integrationService.wsdl.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
 import javax.xml.bind.JAXBElement;
