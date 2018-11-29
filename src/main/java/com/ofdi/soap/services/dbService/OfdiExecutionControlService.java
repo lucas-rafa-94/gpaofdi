@@ -20,6 +20,8 @@ public class OfdiExecutionControlService {
             ofdiExecutionControlRepository.save(ofdiExecutionControlModel);
         }catch (Exception e){
             logger.error("Erro ao se comunicar com o banco: " + e.getMessage());
+            logger.info("Aplicacao se encerrando.. ");
+            System.exit(0);
         }
     }
 }
