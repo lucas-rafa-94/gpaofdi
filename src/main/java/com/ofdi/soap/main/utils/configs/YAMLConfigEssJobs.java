@@ -1,3 +1,13 @@
+/* OCS - Oracle Consulting Services - Middleware
+ *
+ * Data de criação 03/12/2018
+ * Autor: lucas.dos@oracle.com
+ *
+ * Projeto: GPA OFDI
+ *
+ *
+ */
+
 package com.ofdi.soap.main.utils.configs;
 
 import com.ofdi.soap.models.yaml.ConfigUtilsEss;
