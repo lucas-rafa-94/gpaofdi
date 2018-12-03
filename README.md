@@ -1,4 +1,9 @@
-# GPAOFDI
+# GPA - OFDI
+
+######Consultor Middleware
+#####Autor: Lucas dos Santos
+#####Email: lucas.dos@oracle.com
+
 
 ## RESUMO
 
@@ -19,13 +24,13 @@ Segue abaixo os passos necessários para que a aplicação rode seguindo as prem
 
 ### PASSO 1 - CRIAÇÃO DO BANCO
 
-Como pedido a aplicação insere seus dados de estado em um banco de dados MySql, e primeiramente esse banco deve estar disponível.
-Após isso, solicitamos que o arquivo "script.sql" encontrado nesse mesmo projeto na pasta "entregavel" seja executado. Nesse script esta presente
+Como pedido, a aplicação insere seus dados de estado em um banco de dados MySql, e primeiramente esse banco deve estar disponível.
+Após isso, solicitamos que o arquivo *script.sql* encontrado nesse mesmo projeto na pasta *entregavel* seja executado. Nesse script esta presente
 a criação do banco, usuário e a tabela com que a aplicação irá conversar.
 
 ### PASSO 2 - CONFIGURAÇÃO PROPERTIES RELACIONADO AO BANCO
 
-Com o banco/tabela em ordem, devemos alterar o arquivo "application.properties" encontrados no "/src/main/resources/application.properties"
+Com o banco/tabela em ordem, devemos alterar o arquivo *application.properties* encontrados no */src/main/resources/application.properties*
 a fim de que comporte o novo banco criado, seguindo o exemplo abaixo:
 
 ```
@@ -34,7 +39,25 @@ spring.datasource.username=gpauser
 spring.datasource.password=Welcome#1
 ```
 
-### PASSO 3 - BUILD APLICAÇÃO
+### PASSO 3 - CONFIGURAR LOCALIZAÇÃO PASTA/ARQUIVO
+
+Próximo passo é configurar a localização onde a pasta raiz e os arquivos estão (2 arquivos .csv, 4 arquivos .zip). Para configurá-lo basta alterar 
+o arquivo *application.yml* encontrado no diretório */src/main/resources/application.yml*, nesta parte destacada abaixo: (Exemplo)
+
+```
+folder:
+  path: /Users/lucasdossantos/Desktop/gpaCsv/testefinal/
+  csvChefe: user_import_chefe.csv
+  csvVendedor: user_import_vendedor.csv
+  zipParticipantChefe: IcParticipantDetailChefe.zip
+  zipParticipantVendedor: IcParticipantDetailVend.zip
+  zipGoalChefe: IcGoalImportChefe.zip
+  zipGoalVendedor: IcGoalImportVend.zip
+```
+
+Obs:. Atenção na hora de colocar o *path*, dependendo do Sistema Operacional a posição da barra muda: Windows, "\\"; Unix/Linux, "/".
+
+### PASSO 4 - BUILD APLICAÇÃO
 
 Com isso já podemos fazer build de nossa aplicação e gerar o jar que será executado diariamente, seguindo esses comandos:
 
@@ -48,7 +71,7 @@ Obs:. Caso sua Ide não possua plugins Gradle, o Gradle deverá estar instalado 
 ### PASSO 4 - GERAR .BAT/.SH
 
 Uma alternativa para que não seja necessário rodar o .jar direto disponibilizamos templates de .bat (Windows) e .sh (Unix/Linux),
-ambos dispostos na pasta "entregavel". Fiquem a vontade para customizar para atender as demandas de gerenciamento da atividade.
+ambos dispostos na pasta *entregavel*. Fiquem a vontade para customizar para atender as demandas de gerenciamento da atividade.
 
 run.bat
 
@@ -67,17 +90,17 @@ java -jar gpaofdi-0.1.jar
 ## CONFIGURAÇÃO PARÂMETROS
 
 Todos os parâmetros utilizados nos jobs estão presentes e sendo parametrizados de forma externa do código Java.
-Estão presentes no arquivo "application.yml" encontrado no diretório "/src/main/resources/application.yml"
+Estão presentes no arquivo *application.yml* encontrado no diretório */src/main/resources/application.yml*
 
-application.yml
+######application.yml
 
 ```
 folder:
   path: /Users/lucasdossantos/Desktop/gpaCsv/testefinal/
   csvChefe: user_import_chefe.csv
   csvVendedor: user_import_vendedor.csv
-  zipChefe: IcParticipantDetailChefe.zip
-  zipVendedor: IcParticipantDetailVend.zip
+  zipParticipantChefe: IcParticipantDetailChefe.zip
+  zipParticipantVendedor: IcParticipantDetailVend.zip
   zipGoalChefe: IcGoalImportChefe.zip
   zipGoalVendedor: IcGoalImportVend.zip
 client:
@@ -200,6 +223,9 @@ utils:
   role: FAFusionImportExport
   switch: N
   threadsleep: 36000
+  encodinginput: iso-8859-1
+  encodingoutput: utf-8
+  retries: 3
 incentivecompensation:
   mapping: 300000001064232
   param1: NEW
@@ -207,5 +233,47 @@ incentivecompensation:
   param3: '#NULL'
 ```
 Qualquer alteração no valor dos parâmetros desse arquivo, será necessário a execução do PASSO 3 - BUILD APLICAÇÃO novamente.
+
+## CONFIGURAÇÃO UTILS
+####Retentativas
+A aplicação está parametrizada para realizar retentativas se no meio do processo ocorrer uma exceção, para customizar esse número de retentativas
+no *application.yml* deverá ser alterado o parâmetro *utils.retries*:
+
+```
+utils:
+  file: zip
+  accountparticipant: ic$/incentiveCompensationParticipant$/import$
+  accountgoal: ic$/incentiveCompensationParticipantGoal$/import$
+  role: FAFusionImportExport
+  switch: N
+  threadsleep: 36000
+  encoding: false
+  encodinginput: iso-8859-1
+  encodingoutput: utf-8
+  *retries: 3*
+```
+
+####Encoding arquivos .csv
+Para evitarmos alguns problemas de encoding entre arquivos .csv foi parametrizado uma transformação default. No caso de *iso-8859-1* para *utf-8*.
+Caso seja necessário a alteração do mesmo deverá ser alterado os respectivos parâmetros: *utils.encodinginput* e *utils.encodingoutput*. Como exemplo
+abaixo:
+
+```
+utils:
+  file: zip
+  accountparticipant: ic$/incentiveCompensationParticipant$/import$
+  accountgoal: ic$/incentiveCompensationParticipantGoal$/import$
+  role: FAFusionImportExport
+  switch: N
+  threadsleep: 36000
+  *encoding: true*
+  *encodinginput: iso-8859-1*
+  *encodingoutput: utf-8*
+  retries: 3
+```
+
+Obs:. Para que essa feature seja ativada/desativada, basta alterar o parâmetro *utils.enconding* para true ou false.
+
+
 
 

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,9 +29,17 @@ public class EssJobs {
 
     public static  List<String> verifyInputs( List<String> params, List<String> inputs){
         if(inputs != null){
-            return inputs;
+            List<String> newArray = new ArrayList<>();
+            for(int i = 0; i < inputs.size(); i++){
+                newArray.add(inputs.get(i).replace("'", ""));
+            }
+            return newArray;
         }else {
-            return params;
+            List<String> newArray = new ArrayList<>();
+            for(int i = 0; i < params.size(); i++){
+                newArray.add(params.get(i).replace("'", ""));
+            }
+            return newArray;
         }
     }
 

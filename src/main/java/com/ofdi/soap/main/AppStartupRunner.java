@@ -1,3 +1,13 @@
+/* OCS - Oracle Consulting Services - Middleware
+ *
+ * Data de criação 03/12/2018
+ * Autor: lucas.dos@oracle.com
+ *
+ * Projeto: GPA OFDI
+ *
+ *
+ */
+
 package com.ofdi.soap.main;
 
 import com.ofdi.soap.main.business.BusinessCsv;
@@ -40,6 +50,9 @@ public class AppStartupRunner implements ApplicationRunner {
     @Value("${utils.switch}")
     private String s;
 
+    @Value("${utils.retries}")
+    private String retries;
+
     @Autowired
     OfdiExecutionControlService oecs;
 
@@ -69,57 +82,66 @@ public class AppStartupRunner implements ApplicationRunner {
 
         List<String> params = new ArrayList<>();
         String result= "";
+        int attempt = 0;
+        boolean task = true;
 
         logger.info("Aplicacao iniciada...");
         logger.info("Verificando diretorio: " + myConfigFolder.getPath());
 
-        try {
+        while(task) {
+            try {
 
-            if (helpers.verifyFolderCsv(myConfigFolder.getPath(), myConfigFolder.getCsvChefe(), myConfigFolder.getCsvVendedor())) {
+                if (helpers.verifyFolderCsv(myConfigFolder.getPath(), myConfigFolder.getCsvChefe(), myConfigFolder.getCsvVendedor())) {
 
-                logger.info("Importando arquivo chefe : " + myConfigFolder.getCsvChefe());
-                //Import csv chefe
-                businessCsv.importArchive(myConfigFolder.getCsvChefe(), myConfigFolder.getPath(), myConfigClient.getUser().getName(), true);
+                    logger.info("Importando arquivo chefe : " + myConfigFolder.getCsvChefe());
+                    //Import csv chefe
+                    businessCsv.importArchive(myConfigFolder.getCsvChefe(), myConfigFolder.getPath(), myConfigClient.getUser().getName(), true);
 
-                //Import csv vendedor
-                businessCsv.importArchive(myConfigFolder.getCsvVendedor(), myConfigFolder.getPath(), myConfigClient.getUser().getName(), false);
+                    //Import csv vendedor
+                    logger.info("Importando arquivo vendedor : " + myConfigFolder.getCsvVendedor());
+                    businessCsv.importArchive(myConfigFolder.getCsvVendedor(), myConfigFolder.getPath(), myConfigClient.getUser().getName(), false);
 
-                //Send To LDAP
-                essJobs.abstractService("Send to LDAP", myConfigEssJobs.getServices().getSendToLdap().getJobDefinitionName(), myConfigEssJobs.getServices().getSendToLdap().getPackageName(), myConfigEssJobs.getServices().getSendToLdap().getArguments(), null);
+                    //Send To LDAP
+                    essJobs.abstractService("Send to LDAP", myConfigEssJobs.getServices().getSendToLdap().getJobDefinitionName(), myConfigEssJobs.getServices().getSendToLdap().getPackageName(), myConfigEssJobs.getServices().getSendToLdap().getArguments(), null);
 
-                //Import Incentive Compensation Participants
-                essJobs.abstractService("Import Incentive Compensation Participants", myConfigEssJobs.getServices().getImportIncentiveCompensationParticipants().getJobDefinitionName(), myConfigEssJobs.getServices().getImportIncentiveCompensationParticipants().getPackageName(), myConfigEssJobs.getServices().getImportIncentiveCompensationParticipants().getArguments(), null);
+                    //Import Incentive Compensation Participants
+                    essJobs.abstractService("Import Incentive Compensation Participants", myConfigEssJobs.getServices().getImportIncentiveCompensationParticipants().getJobDefinitionName(), myConfigEssJobs.getServices().getImportIncentiveCompensationParticipants().getPackageName(), myConfigEssJobs.getServices().getImportIncentiveCompensationParticipants().getArguments(), null);
+                }
 
-            }
+                //Participant Detail Chefe
 
-            //Participant Detail Chefe
+                result = uploadToUcm.uploadFile(myConfigFolder.getPath(), helpers.getFileContent(myConfigFolder.getPath() + myConfigFolder.getZipParticipantChefe()), myConfigFolder.getZipParticipantChefe(), typeFile, myConfigFolder.getZipParticipantChefe(), myConfigClient.getUser().getName(), role, accountParticipant, myConfigFolder.getZipParticipantChefe());
+                essJobs.abstractService("Incentive Compensation Participant Detail Import - Chefe ", myConfigEssJobs.getServices().getIncentiveCompensationParticipantDetailImport().getJobDefinitionName(), myConfigEssJobs.getServices().getIncentiveCompensationParticipantDetailImport().getPackageName(), myConfigEssJobs.getServices().getIncentiveCompensationParticipantDetailImport().getArguments(), helpers.getImportDataParams(myConfigFolder.getZipParticipantChefe(), result, s));
+                essJobs.abstractService("Assign Roles to Participants - Chefe ", myConfigEssJobs.getServices().getAssignRolesToParticipants().getJobDefinitionName(), myConfigEssJobs.getServices().getAssignRolesToParticipants().getPackageName(), myConfigEssJobs.getServices().getAssignRolesToParticipants().getArguments(), helpers.getIncentiveParams());
 
-            result = uploadToUcm.uploadFile(myConfigFolder.getPath(), helpers.getFileContent(myConfigFolder.getPath() + myConfigFolder.getZipChefe()), myConfigFolder.getZipChefe(), typeFile, myConfigFolder.getZipChefe(), myConfigClient.getUser().getName(), role, accountParticipant, myConfigFolder.getZipChefe());
-            essJobs.abstractService("Incentive Compensation Participant Detail Import - Chefe ", myConfigEssJobs.getServices().getIncentiveCompensationParticipantDetailImport().getJobDefinitionName(), myConfigEssJobs.getServices().getIncentiveCompensationParticipantDetailImport().getPackageName(), myConfigEssJobs.getServices().getIncentiveCompensationParticipantDetailImport().getArguments(), helpers.getImportDataParams(myConfigFolder.getZipChefe(), result, s));
-            essJobs.abstractService("Assign Roles to Participants - Chefe ", myConfigEssJobs.getServices().getAssignRolesToParticipants().getJobDefinitionName(), myConfigEssJobs.getServices().getAssignRolesToParticipants().getPackageName(), myConfigEssJobs.getServices().getAssignRolesToParticipants().getArguments(), helpers.getIncentiveParams());
+                //Participant Detail Vendedor
 
-            //Participant Detail Vendedor
+                result = uploadToUcm.uploadFile(myConfigFolder.getPath(), helpers.getFileContent(myConfigFolder.getPath() + myConfigFolder.getZipParticipantVendedor()), myConfigFolder.getZipParticipantVendedor(), typeFile, myConfigFolder.getZipParticipantVendedor(), myConfigClient.getUser().getName(), role, accountParticipant, myConfigFolder.getZipParticipantVendedor());
+                essJobs.abstractService("Incentive Compensation Participant Detail Import - Vendedor ", myConfigEssJobs.getServices().getIncentiveCompensationParticipantDetailImport().getJobDefinitionName(), myConfigEssJobs.getServices().getIncentiveCompensationParticipantDetailImport().getPackageName(), myConfigEssJobs.getServices().getIncentiveCompensationParticipantDetailImport().getArguments(), helpers.getImportDataParams(myConfigFolder.getZipParticipantVendedor(), result, s));
+                essJobs.abstractService("Assign Roles to Participants - Vendedor ", myConfigEssJobs.getServices().getAssignRolesToParticipants().getJobDefinitionName(), myConfigEssJobs.getServices().getAssignRolesToParticipants().getPackageName(), myConfigEssJobs.getServices().getAssignRolesToParticipants().getArguments(), helpers.getIncentiveParams());
 
-            result = uploadToUcm.uploadFile(myConfigFolder.getPath(), helpers.getFileContent(myConfigFolder.getPath() + myConfigFolder.getZipVendedor()), myConfigFolder.getZipVendedor(), typeFile, myConfigFolder.getZipVendedor(), myConfigClient.getUser().getName(), role, accountParticipant, myConfigFolder.getZipVendedor());
-            essJobs.abstractService("Incentive Compensation Participant Detail Import - Vendedor ", myConfigEssJobs.getServices().getIncentiveCompensationParticipantDetailImport().getJobDefinitionName(), myConfigEssJobs.getServices().getIncentiveCompensationParticipantDetailImport().getPackageName(), myConfigEssJobs.getServices().getIncentiveCompensationParticipantDetailImport().getArguments(), helpers.getImportDataParams(myConfigFolder.getZipVendedor(), result, s));
-            essJobs.abstractService("Assign Roles to Participants - Vendedor ", myConfigEssJobs.getServices().getAssignRolesToParticipants().getJobDefinitionName(), myConfigEssJobs.getServices().getAssignRolesToParticipants().getPackageName(), myConfigEssJobs.getServices().getAssignRolesToParticipants().getArguments(), helpers.getIncentiveParams());
+                //Goal Chefe
 
-            //Goal Chefe
+                result = uploadToUcm.uploadFile(myConfigFolder.getPath(), helpers.getFileContent(myConfigFolder.getPath() + myConfigFolder.getZipGoalChefe()), myConfigFolder.getZipGoalChefe(), typeFile, myConfigFolder.getZipGoalChefe(), myConfigClient.getUser().getName(), role, accountGoal, myConfigFolder.getZipGoalChefe());
+                essJobs.abstractService("Import Participants Goals - Chefe ", myConfigEssJobs.getServices().getImportParticipantsGoals().getJobDefinitionName(), myConfigEssJobs.getServices().getImportParticipantsGoals().getPackageName(), myConfigEssJobs.getServices().getImportParticipantsGoals().getArguments(), helpers.getImportDataParams(myConfigFolder.getZipGoalChefe(), result, s));
 
-            result = uploadToUcm.uploadFile(myConfigFolder.getPath(), helpers.getFileContent(myConfigFolder.getPath() + myConfigFolder.getZipGoalChefe()), myConfigFolder.getZipGoalChefe(), typeFile, myConfigFolder.getZipGoalChefe(), myConfigClient.getUser().getName(), role, accountGoal, myConfigFolder.getZipGoalChefe());
-            essJobs.abstractService("Import Participants Goals - Chefe ", myConfigEssJobs.getServices().getImportParticipantsGoals().getJobDefinitionName(), myConfigEssJobs.getServices().getImportParticipantsGoals().getPackageName(), myConfigEssJobs.getServices().getImportParticipantsGoals().getArguments(), helpers.getImportDataParams(myConfigFolder.getZipGoalChefe(), result, s));
+                //Goal Vendedor
 
-            //Goal Vendedor
+                result = uploadToUcm.uploadFile(myConfigFolder.getPath(), helpers.getFileContent(myConfigFolder.getPath() + myConfigFolder.getZipGoalVendedor()), myConfigFolder.getZipGoalVendedor(), typeFile, myConfigFolder.getZipGoalVendedor(), myConfigClient.getUser().getName(), role, accountGoal, myConfigFolder.getZipGoalVendedor());
+                essJobs.abstractService("Import Participants Goals - Vendedor ", myConfigEssJobs.getServices().getImportParticipantsGoals().getJobDefinitionName(), myConfigEssJobs.getServices().getImportParticipantsGoals().getPackageName(), myConfigEssJobs.getServices().getImportParticipantsGoals().getArguments(), helpers.getImportDataParams(myConfigFolder.getZipGoalVendedor(), result, s));
 
-            result = uploadToUcm.uploadFile(myConfigFolder.getPath(), helpers.getFileContent(myConfigFolder.getPath() + myConfigFolder.getZipGoalVendedor()), myConfigFolder.getZipGoalVendedor(), typeFile, myConfigFolder.getZipGoalVendedor(), myConfigClient.getUser().getName(), role, accountGoal, myConfigFolder.getZipGoalVendedor());
-            essJobs.abstractService("Import Participants Goals - Vendedor ", myConfigEssJobs.getServices().getImportParticipantsGoals().getJobDefinitionName(), myConfigEssJobs.getServices().getImportParticipantsGoals().getPackageName(), myConfigEssJobs.getServices().getImportParticipantsGoals().getArguments(), helpers.getImportDataParams(myConfigFolder.getZipGoalVendedor(), result, s));
-
-        }catch (Exception e){
-            logger.error("Aplicacao com erro: " + e.getMessage());
+            } catch (Exception e) {
+                if(attempt < Integer.parseInt(retries)){
+                    logger.error("Aplicacao com erro: " + e.getMessage());
+                    logger.info("Retentativa " + attempt + " sera inicializada...");
+                }else{
+                    logger.error("Aplicacao com erro: " + e.getMessage());
+                    logger.info("Numero de retries excedido...");
+                    logger.info("Encerrando Aplicacao...");
+                    System.exit(0);
+                }
+        }
             logger.info("Encerrando Aplicacao...");
             System.exit(0);
-        }
 
-        logger.info("Encerrando Aplicacao...");
-        System.exit(0);
-}}
+}}}

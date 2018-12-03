@@ -2,8 +2,8 @@ folder:
   path: /Users/lucasdossantos/Desktop/gpaCsv/testefinal/
   csvChefe: user_import_chefe.csv
   csvVendedor: user_import_vendedor.csv
-  zipChefe: IcParticipantDetailChefe.zip
-  zipVendedor: IcParticipantDetailVend.zip
+  zipParticipantChefe: IcParticipantDetailChefe.zip
+  zipParticipantVendedor: IcParticipantDetailVend.zip
   zipGoalChefe: IcGoalImportChefe.zip
   zipGoalVendedor: IcGoalImportVend.zip
 client:
@@ -128,6 +128,10 @@ utils:
   role: FAFusionImportExport
   switch: N
   threadsleep: 36000
+  encoding: false
+  encodinginput: iso-8859-1
+  encodingoutput: utf-8
+  retries: 3
 incentivecompensation:
   mapping: 300000001064232
   param1: NEW

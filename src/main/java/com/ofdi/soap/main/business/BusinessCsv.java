@@ -38,7 +38,7 @@ public class BusinessCsv {
         String id = helpers.toTimesTamp() + csv.replace(".csv","");
         oecs.insert(new OfdiExecutionControlModel(id, csv, path, username, "STARTED", 0, new Date()));
         try{
-            submitImportActivityResponse = siarc.submitImportActivity(helpers.getFileContent(path + csv), chefe);
+            submitImportActivityResponse = siarc.submitImportActivity(helpers.getFileContentCsv(path + csv), chefe);
             oecs.insert(new OfdiExecutionControlModel(id, csv, path, username, "IMPORTED", 1, new Date()));
             logger.info("Sucesso ao importar arquivo  : " + csv + " id: " + submitImportActivityResponse.getResult().getJobId().getValue());
         }catch (Exception e){

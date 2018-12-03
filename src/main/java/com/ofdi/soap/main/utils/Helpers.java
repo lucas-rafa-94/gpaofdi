@@ -1,11 +1,12 @@
 package com.ofdi.soap.main.utils;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
+import java.io.*;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,6 +29,15 @@ public class Helpers {
     @Value("${incentivecompensation.param3}")
     private String param3;
 
+    @Value("${utils.encodinginput}")
+    private String encodingInput;
+
+    @Value("${utils.encodingoutput}")
+    private String encodingOutput;
+
+    @Value("${utils.encoding}")
+    private String encoding;
+
     Logger logger = LoggerFactory.getLogger(Helpers.class);
 
     public  byte[] getFileContent (String path){
@@ -35,7 +45,38 @@ public class Helpers {
         try{
             fileContent = Files.readAllBytes(new File(path).toPath());
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error("Erro na conversao do arquivo " + path + " em byte[]...");
+            logger.info("Aplicação se encerrando....");
+            System.exit(0);
+        }
+        return fileContent;
+    }
+
+    public  byte[] getFileContentCsv (String path){
+        byte [] fileContent = null;
+        File file = new File(path);
+
+        if(Boolean.parseBoolean(encoding)){
+            try{
+
+                String content = FileUtils.readFileToString(file, encodingInput);
+                FileUtils.write(file, content, encodingOutput);
+
+                fileContent = Files.readAllBytes(new File(path).toPath());
+
+            }catch (Exception e){
+                logger.error("Erro na conversao do arquivo " + path + " em byte[]...");
+                logger.info("Aplicação se encerrando....");
+                System.exit(0);
+            }
+        }else {
+            try{
+                fileContent = Files.readAllBytes(new File(path).toPath());
+            }catch (Exception e){
+                logger.error("Erro na conversao do arquivo " + path + " em byte[]...");
+                logger.info("Aplicação se encerrando....");
+                System.exit(0);
+            }
         }
         return fileContent;
     }
