@@ -26,8 +26,11 @@ public class YAMLConfigFolder {
     private String zipParticipantVendedor;
     private String zipGoalChefe;
     private String zipGoalVendedor;
+    private String sucessFolder;
+    private String errorFolder;
 
-    public YAMLConfigFolder(String path, String csvChefe, String csvVendedor, String zipParticipantChefe, String zipParticipantVendedor, String zipGoalChefe, String zipGoalVendedor) {
+
+    public YAMLConfigFolder(String path, String csvChefe, String csvVendedor, String zipParticipantChefe, String zipParticipantVendedor, String zipGoalChefe, String zipGoalVendedor, String sucessFolder, String errorFolder) {
         this.path = path;
         this.csvChefe = csvChefe;
         this.csvVendedor = csvVendedor;
@@ -35,6 +38,8 @@ public class YAMLConfigFolder {
         this.zipParticipantVendedor = zipParticipantVendedor;
         this.zipGoalChefe = zipGoalChefe;
         this.zipGoalVendedor = zipGoalVendedor;
+        this.sucessFolder = sucessFolder;
+        this.errorFolder = errorFolder;
     }
 
     public YAMLConfigFolder() {
@@ -94,5 +99,21 @@ public class YAMLConfigFolder {
 
     public void setZipGoalVendedor(String zipGoalVendedor) {
         this.zipGoalVendedor = zipGoalVendedor;
+    }
+
+    public String getSucessFolder() {
+        return sucessFolder;
+    }
+
+    public void setSucessFolder(String sucessFolder) {
+        this.sucessFolder = sucessFolder;
+    }
+
+    public String getErrorFolder() {
+        return errorFolder;
+    }
+
+    public void setErrorFolder(String errorFolder) {
+        this.errorFolder = errorFolder;
     }
 }

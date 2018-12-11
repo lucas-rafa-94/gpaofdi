@@ -20,11 +20,11 @@ Segue abaixo os passos necessários para que a aplicação rode seguindo as prem
 ## REQUISITOS
 - Máquina Windows/Linux
 - Java 8
-- Banco de dados MySql
+- Banco de dados MySql/Oracle
 
 ### PASSO 1 - CRIAÇÃO DO BANCO
 
-Como pedido, a aplicação insere seus dados de estado em um banco de dados MySql, e primeiramente esse banco deve estar disponível.
+Como pedido, a aplicação insere seus dados de estado em um banco de dados MySql/Oracle, e primeiramente esse banco deve estar disponível.
 Após isso, solicitamos que o arquivo *script.sql* encontrado nesse mesmo projeto na pasta *entregavel* seja executado. Nesse script esta presente
 a criação do banco, usuário e a tabela com que a aplicação irá conversar.
 
@@ -33,15 +33,23 @@ a criação do banco, usuário e a tabela com que a aplicação irá conversar.
 Com o banco/tabela em ordem, devemos alterar o arquivo *application.properties* encontrados no */src/main/resources/application.properties*
 a fim de que comporte o novo banco criado, seguindo o exemplo abaixo:
 
+######Exemplo MySql
 ```
 spring.datasource.url=jdbc:mysql://localhost:3306/gpadb
 spring.datasource.username=gpauser
 spring.datasource.password=Welcome#1
 ```
 
+
+######Exemplo Oracle
+```
+spring.datasource.url=jdbc:oracle:thin:@//<host>:<port>/<service-name>
+spring.datasource.username=user
+spring.datasource.password=12345
+```
 ### PASSO 3 - CONFIGURAR LOCALIZAÇÃO PASTA/ARQUIVO
 
-Próximo passo é configurar a localização onde a pasta raiz e os arquivos estão (2 arquivos .csv, 4 arquivos .zip). Para configurá-lo basta alterar 
+Próximo passo é configurar a localização onde a pasta raiz e os arquivos estão (2 arquivos .csv, 4 arquivos .zip) e o diretório de sucesso/erro. Para configurá-lo basta alterar 
 o arquivo *application.yml* encontrado no diretório */src/main/resources/application.yml*, nesta parte destacada abaixo: (Exemplo)
 
 ```
@@ -53,6 +61,8 @@ folder:
   zipParticipantVendedor: IcParticipantDetailVend.zip
   zipGoalChefe: IcGoalImportChefe.zip
   zipGoalVendedor: IcGoalImportVend.zip
+  sucessFolder: /Users/lucasdossantos/Desktop/gpaCsv/testefinal/sucesso/
+  errorFolder: /Users/lucasdossantos/Desktop/gpaCsv/testefinal/erro/
 ```
 
 Obs:. Atenção na hora de colocar o *path*, dependendo do Sistema Operacional a posição da barra muda: Windows, "\\"; Unix/Linux, "/".

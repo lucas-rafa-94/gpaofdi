@@ -45,10 +45,12 @@ public class UploadToUcm {
             result  = ufturc.uploadFileToUcmRequest(content, fileName.trim(), contentType, documentTitle, documentAuthor, documentSecurityGroup, documentAccount, documentName).getResult();
             logger.info("Sucesso ao iportar arquivo " + fileName.trim() + " id: " + result);
             oecs.insert(new OfdiExecutionControlModel(id, fileName.trim(), path, documentAuthor, "IMPORTED", 1, new Date()));
+
         }catch (Exception e){
             e.printStackTrace();
             logger.info("Erro ao importar Arquivo " + fileName.trim() + " : " + e.getMessage());
             oecs.insert(new OfdiExecutionControlModel(id, fileName.trim(), path, documentAuthor, "FAILED", 1, new Date()));
+            helpers.moveArchive(fileName,false);
         }
         return result;
     }

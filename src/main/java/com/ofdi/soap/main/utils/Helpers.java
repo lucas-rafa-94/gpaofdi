@@ -10,9 +10,11 @@
 
 package com.ofdi.soap.main.utils;
 
+import com.ofdi.soap.main.utils.configs.YAMLConfigFolder;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +50,9 @@ public class Helpers {
     @Value("${utils.encoding}")
     private String encoding;
 
+    @Autowired
+    private YAMLConfigFolder myConfigFolder;
+
     Logger logger = LoggerFactory.getLogger(Helpers.class);
 
     public  byte[] getFileContent (String path){
@@ -62,10 +67,31 @@ public class Helpers {
         return fileContent;
     }
 
+    public void moveArchive(String fileIn, boolean status){
+        File file = new File(myConfigFolder.getPath() + fileIn);
+        try{
+            if(status){
+                file.renameTo(new File(myConfigFolder.getSucessFolder() + toTimesTamp() + fileIn));
+            }else {
+                file.renameTo(new File(myConfigFolder.getErrorFolder() + toTimesTamp() + fileIn));
+            }
+        }catch (Exception e){
+            logger.error("Erro ao transferir aquivo fileIn : " + e.getMessage());
+        }
+
+    }
+
+    public void validateResult(boolean status, String fileIn){
+        if(status){
+            moveArchive(fileIn, status);
+        }else{
+            moveArchive(fileIn, status);
+        }
+    }
+
     public  byte[] getFileContentCsv (String path){
         byte [] fileContent = null;
         File file = new File(path);
-
         if(Boolean.parseBoolean(encoding)){
             try{
 

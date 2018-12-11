@@ -6,6 +6,8 @@ folder:
   zipParticipantVendedor: IcParticipantDetailVend.zip
   zipGoalChefe: IcGoalImportChefe.zip
   zipGoalVendedor: IcGoalImportVend.zip
+  sucessFolder: /Users/lucasdossantos/Desktop/gpaCsv/testefinal/sucesso/
+  errorFolder: /Users/lucasdossantos/Desktop/gpaCsv/testefinal/erro/
 client:
   defaultUriIntegrationService: https://ehhs-test.fa.la1.oraclecloud.com:443/fscmService/ErpIntegrationService
   defaultUriMktImport: https://ehhs-test.fa.la1.oraclecloud.com:443/crmService/ImportPublicService

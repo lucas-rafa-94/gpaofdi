@@ -28,7 +28,7 @@ public class GetESSJobStatusRequestClient extends WebServiceGatewaySupport {
     @Value("${utils.threadsleep}")
     private String threadSleep;
 
-    public GetESSJobStatusResponse getEssJobStatus(Long requestId , String defaultUri, String localPart, String xmlnsValue, String xmlnsPrefix) throws Exception {
+    public String getEssJobStatus(Long requestId , String defaultUri, String localPart, String xmlnsValue, String xmlnsPrefix) throws Exception {
 
         GetESSJobStatus request = new GetESSJobStatus();
         GetESSJobStatusResponse response = new GetESSJobStatusResponse();
@@ -55,6 +55,6 @@ public class GetESSJobStatusRequestClient extends WebServiceGatewaySupport {
                         !response.getResult().equalsIgnoreCase("Canceled") &&
                         !response.getResult().equalsIgnoreCase("Canceling")
         );
-        return response;
+        return response.getResult();
     }
 }

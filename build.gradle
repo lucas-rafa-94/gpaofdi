@@ -78,7 +78,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-
+	compile fileTree(include: ['*.jar'], dir: 'libs')
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.9.RELEASE'
 	compile('org.springframework.boot:spring-boot-starter-web-services')
 	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient

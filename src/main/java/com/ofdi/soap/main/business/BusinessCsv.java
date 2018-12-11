@@ -40,7 +40,7 @@ public class BusinessCsv {
     @Autowired
     Helpers helpers;
 
-    public void importArchive(String csv, String path, String username, boolean chefe ){
+    public void importArchive(String csv, String path, String username, boolean chefe){
 
         SubmitImportActivityResponse submitImportActivityResponse = new SubmitImportActivityResponse();
 
@@ -53,17 +53,21 @@ public class BusinessCsv {
         }catch (Exception e){
             logger.error("Erro ao importar " + csv + " : " + e.getMessage());
             oecs.insert(new OfdiExecutionControlModel(id, csv, path, username, "FAILED", 1, new Date()));
+            helpers.moveArchive(csv,false);
         }
         try{
             if(giasc.getImportActivityStatus(submitImportActivityResponse.getResult().getJobId().getValue()).getResult().getStatus().getValue().equals("COMPLETE_WITH_ERRORS")){
                 logger.error("Erro ao importar " + csv + " : " + "COMPLETE_WITH_ERRORS");
                 logger.info("Encerrando Aplicacao...");
+                helpers.moveArchive(csv,false);
                 System.exit(0);
             };
             oecs.insert(new OfdiExecutionControlModel(id, csv, path, username, "PROCESSED", 2, new Date()));
+            helpers.moveArchive(csv,true);
         }catch (Exception e){
             logger.error("Erro ao importar " + csv + " : " + e.getMessage());
             oecs.insert(new OfdiExecutionControlModel(id, csv, path, username, "FAILED", 2, new Date()));
+            helpers.moveArchive(csv,false);
         }
     }
 }
